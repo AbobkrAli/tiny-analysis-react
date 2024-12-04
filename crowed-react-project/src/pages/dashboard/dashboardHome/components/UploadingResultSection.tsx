@@ -1,11 +1,11 @@
-import { Box, Skeleton } from '@mui/material';
+import { Box, Skeleton, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import DashboardDetailsSection from '../../../landing/components/DashboardDetailsSection';
+import RegionTable from '../../../../components/tables/RegionTable';
 
-const UploadingResultSection = () => {
+const UploadingResultSection = ({navigate}: {navigate: (path: string) => void}) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -26,12 +26,10 @@ const UploadingResultSection = () => {
         </Box>
       ) : (
         <Box>
-          <Box sx={{ width: '100%' , display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 2}}>
-            <DashboardDetailsSection />
-            <DashboardDetailsSection />
-            <DashboardDetailsSection />
-            <DashboardDetailsSection />
+          <Box sx={{marginBottom: 8, color: 'primary.main'}}>
+            <Typography variant='h1'>Regions</Typography>
           </Box>
+          <RegionTable navigate={navigate} />
         </Box>
       )}
     </Box>

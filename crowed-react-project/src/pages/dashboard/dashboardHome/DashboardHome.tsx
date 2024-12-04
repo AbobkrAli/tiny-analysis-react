@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Box, CircularProgress } from '@mui/material';
 import UploadImageSection from './components/UploadImageSection';
 
-const DashboardHome: React.FC = () => {
+const DashboardHome = ({navigate}: {navigate: (path: string) => void}) => {
   const [isPrimaryLoading, setIsPrimaryLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -20,7 +20,7 @@ const DashboardHome: React.FC = () => {
           <CircularProgress size={60} />
         </Box>
       ) : (
-        <UploadImageSection />
+        <UploadImageSection navigate={navigate}/>
       )}
     </Box>
   );

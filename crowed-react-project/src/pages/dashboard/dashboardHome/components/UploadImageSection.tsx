@@ -13,7 +13,7 @@ import UploadingResultSection from './UploadingResultSection';
 import { toast } from 'sonner';
 import { useHomeAnalysisStore } from '../../../../stores/homeAnalysisStore';
 
-const UploadImageSection = () => {
+const UploadImageSection = ({ navigate }: { navigate: (path: string) => void }) => {
   const [iSettingsChosen, setIsSettingsChosen] = React.useState(false);
   const [isFullAnalysisChosen, setIsFullAnalysisChosen] = React.useState(false);
 
@@ -149,7 +149,7 @@ const UploadImageSection = () => {
           </Box>
         </Container>
       ) : (
-        <UploadingResultSection />
+        <UploadingResultSection navigate={navigate} />
       )}
     </Box>
   );

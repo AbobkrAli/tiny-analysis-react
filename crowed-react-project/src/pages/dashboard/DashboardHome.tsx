@@ -1,17 +1,20 @@
+import React from 'react';
 import Box from '@mui/material/Box';
 import { createTheme } from '@mui/material/styles';
 import { AppProvider } from '@toolpad/core/AppProvider';
 import { DashboardLayout } from '@toolpad/core/DashboardLayout';
 import { useDemoRouter } from '@toolpad/core/internal';
 import { AnalyticsOutlined, History, HomeMax } from '@mui/icons-material';
+import { Button, Typography } from '@mui/material';
 import './style/dashboardStyles.css';
 import DashboardHome from './dashboardHome/DashboardHome';
 import DashboardHistory from './dashboardHistory/DashboardHistory';
+import RegionDetailsPage from './dashboardHome/components/RegionDetailsPage';
 
 const demoTheme = createTheme({
   palette: {
     primary: {
-      main: '#D86707',
+      main: '#5a528b',
     },
     secondary: {
       main: '#f50057',
@@ -39,10 +42,12 @@ const demoTheme = createTheme({
   },
 });
 
-// Define different segments of the app (Analytics, History, Home)
-
 // Custom Content based on Route Pathname
-function DemoPageContent({ pathname }: { pathname: string }) {
+function DemoPageContent({ pathname, navigate }: { pathname: string; navigate: (path: string) => void }) {
+  // Match dynamic region route
+  const match = pathname.match(/^\/region\/(.+)$/);
+  const regionId = match ? match[1] : null;
+
   return (
     <Box
       sx={{
@@ -57,11 +62,16 @@ function DemoPageContent({ pathname }: { pathname: string }) {
         padding: 3,
       }}
     >
-  
       {pathname === '/home' ? (
-        <DashboardHome /> 
-      ): pathname === '/history' && (
+        <>
+          <DashboardHome navigate={navigate} />
+        </>
+      ) : pathname === '/history' ? (
         <DashboardHistory />
+      ) : regionId ? (
+        <RegionDetailsPage regionId={regionId} />
+      ) : (
+        <Typography variant="h1">Page Not Found</Typography>
       )}
     </Box>
   );
@@ -73,16 +83,11 @@ interface DemoProps {
 
 export function DashboardLayoutNavigationActions(props: DemoProps) {
   const { window } = props;
-  
-  // Set default route to '/home'
+
+  // Initialize router with default route
   const router = useDemoRouter('/home');
-  
-
-
-
 
   const demoWindow = window !== undefined ? window() : undefined;
-
 
   return (
     <AppProvider
@@ -91,7 +96,6 @@ export function DashboardLayoutNavigationActions(props: DemoProps) {
           segment: 'home',
           title: 'Home',
           icon: <HomeMax />,
-          // action: <Chip label={7} color="primary" size="small" />,
         },
         {
           segment: 'analytics',
@@ -113,28 +117,25 @@ export function DashboardLayoutNavigationActions(props: DemoProps) {
               title: 'graph analysis',
               icon: <AnalyticsOutlined />,
             },
-          ]
+          ],
         },
         {
           segment: 'history',
           title: 'History',
           icon: <History />,
         },
-        
-        {kind: 'divider'},
-        
+        { kind: 'divider' },
       ]}
       router={router}
       theme={demoTheme}
       window={demoWindow}
       branding={{
-        logo: <img src='/logo.png' />,
-        title: ''
+        logo: <img src="/logo.png" alt="Logo" />,
+        title: '',
       }}
-
     >
       <DashboardLayout>
-        <DemoPageContent pathname={router.pathname} />
+        <DemoPageContent pathname={router.pathname} navigate={router.navigate} />
       </DashboardLayout>
     </AppProvider>
   );
